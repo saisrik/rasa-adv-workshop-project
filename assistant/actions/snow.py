@@ -49,7 +49,9 @@ class SnowAPI:
             "Content-Type": "application/json",
             "Accept": "application/json",
         }    
-        
+        #TODO: Improve Error Handling
+        # Enhance the exception handling of the assistant such that it can gracefully handle connection errors.
+        # For example, the assistant should notify the user if ServiceNow is down.
         self._session = ClientSession(headers=json_headers, auth=self.auth)
         return self._session
 
@@ -64,7 +66,6 @@ class SnowAPI:
         Returns:
             A dictionary with user profile information.
         """
-        
         url = f"{self.base_api_url}/table/sys_user/{id}"
         session = await self.open_session()
 

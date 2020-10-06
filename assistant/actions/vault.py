@@ -22,7 +22,5 @@ class Vault:
         Returns:
             Dict containing the secret data.
         """
-
         secret_response = self.vault_client.secrets.kv.read_secret_version(path=name)
         return secret_response["data"]["data"]
-        
