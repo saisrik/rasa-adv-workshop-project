@@ -49,9 +49,6 @@ class SnowAPI:
             "Content-Type": "application/json",
             "Accept": "application/json",
         }    
-        #TODO: Improve Error Handling
-        # Enhance the exception handling of the assistant such that it can gracefully handle connection errors.
-        # For example, the assistant should notify the user if ServiceNow is down.
         self._session = ClientSession(headers=json_headers, auth=self.auth)
         return self._session
 
@@ -69,19 +66,37 @@ class SnowAPI:
         url = f"{self.base_api_url}/table/sys_user/{id}"
         session = await self.open_session()
 
-        async with session.get(url) as resp:
-            if resp.status != 200:
-                logger.error("Unable to load user profile. Status: %d", resp.status)
-                return anonymous_profile
-            
-            resp_json = await resp.json()
-            user = resp_json.get("result")            
-            user_profile = {
-                "id": id,
-                "name": user.get("name"),
-                "email": user.get("email")
-            }
-            return user_profile
+        try:
+            async with session.get(url) as resp:
+                if resp.status != 200:
+                    logger.error("Unable to load user profile. Status: %d", resp.status)
+                    return anonymous_profile
+
+                resp_json = await resp.json()
+                user = resp_json.get("result")
+                user_profile = {
+                    "id": id,
+                    "name": user.get("name"),
+                    "email": user.get("email")
+                }
+                return user_profile
+        except Exception as e:
+            print('\nService Now Instance is Unavailable\n', e)
+            return {}
+
+        # async with session.get(url) as resp:
+        #     if resp.status != 200:
+        #         logger.error("Unable to load user profile. Status: %d", resp.status)
+        #         return anonymous_profile
+        #
+        #     resp_json = await resp.json()
+        #     user = resp_json.get("result")
+        #     user_profile = {
+        #         "id": id,
+        #         "name": user.get("name"),
+        #         "email": user.get("email")
+        #     }
+        #     return user_profile
 
     async def retrieve_incidents(self, user_profile) -> Dict[Text, Any]:
         caller_id = user_profile.get("id")
