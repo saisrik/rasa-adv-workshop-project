@@ -33,6 +33,8 @@ slots:
     type: unfeaturized
   requested_slot:
     type: unfeaturized
+  user_email:
+    type: unfeaturized
 
 responses:
   utter_out_of_scope:
@@ -70,10 +72,11 @@ responses:
   utter_default:
   - text: I didn't quite understand that. Could you rephrase?
   utter_ask_confirm:
-  - text: "Should I open an incident with the following details?
-          \n    Title: {incident_title}
-          \n    Description: {problem_description}          
-          \n    Priority: {priority}"
+  - text: "{user_name} Should I open an incident with the following details?
+          \n-Email: {user_email}
+          \n-Title: {incident_title}
+          \n-Description: {problem_description}
+          \n-Priority: {priority}"
     buttons:
     - title: Yes
       payload: /affirm

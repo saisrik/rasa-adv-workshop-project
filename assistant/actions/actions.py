@@ -44,6 +44,10 @@ class ActionSessionStart(Action):
 
         if user_profile is None:
             id = get_user_id_from_event(tracker)
+
+            # id = '62826bf03710200044e0bfc8bcbe5df1'
+            id = '12826bf03710200044e0bfc8bcbe5db1'
+
             if id == anonymous_profile.get("id"):
                 user_profile = anonymous_profile
             else:    
@@ -54,6 +58,7 @@ class ActionSessionStart(Action):
 
         if user_name is None:
             slots.append(SlotSet(key="user_name", value=user_profile.get("name")))
+            slots.append(SlotSet(key="user_email", value=user_profile.get("email")))
 
         return slots
 
@@ -195,8 +200,9 @@ class OpenIncidentForm(FormAction):
         return [
             AllSlotsReset(),
             SlotSet("user_profile", user_profile),
-            SlotSet("user_name", user_profile.get("name"))
-        ]   
+            SlotSet("user_name", user_profile.get("name")),
+            SlotSet("user_email", user_profile.get("email"))
+        ]
 
     async def submit(
         self,
